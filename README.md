@@ -2,8 +2,8 @@
 
 | | |
 | --- | --- |
-| **Draft version** | 0.1 |
-| **Prepared by** | Joeri Van Dooren, ON6URE / RF.Guru |
+| **Draft version** | 0.2 |
+| **Prepared by** | Joeri Van Dooren, ON6URE (<https://on6ure.be>) / RF.Guru |
 | **Intended audience** | IARU Region 1 national societies and their VHF/UHF managers, the IARU R1 VHF/UHF/Microwaves Committee (C5), repeater and unmanned-station coordinators, and the amateur emergency-communication groups (in Belgium B-EARS, in the Netherlands DARES) |
 | **Status** | Request for comments |
 | **Comment period** | 60 days from publication of this draft (via [GitHub Issues](https://github.com/Guru-RF/winlink-rfc-iaru-r1/issues)), to allow circulation to IARU Region 1 national societies and their VHF managers |
@@ -26,15 +26,15 @@ This is not a request to invent a new mode or a new band segment. Unlike a sprea
 
 **VARA FM** is a software (sound-card) modem that carries Winlink traffic over an ordinary FM voice channel far faster than classic packet radio (see [Section 3.2](#32-vara-fm--audio-into-an-ordinary-fm-radio-not-a-new-mode)). It is the mode toward which Winlink VHF activity has been moving, because it is roughly ten to twenty times faster than 1200-baud AX.25 packet while still fitting a standard FM channel.
 
-**DWS (Dutch Winlink System)** is a package of Winlink software plus a station configuration, developed in the Netherlands by Chris PA7RHM, Jan PH3J and Hans PA3GJM, that turns a standard Winlink Express station into an unmanned RMS gateway and/or **digipeater**. Its authors describe it as *"a robust EmComm solution for exchanging email messages over radio for emergency-communication teams."* DWS keeps digipeat mode active for **both** AX.25 packet **and** VARA FM on a single frequency with one sound-modem, and its relay/self-mapping topology is, in its own words, *"based on APRS."* In the context of emergency communications — **B-EARS** (Belgium Emergency Amateur Radio Service, part of the national society **UBA**) and **DARES** (Dutch Amateur Radio Emergency Service, in the Netherlands, whose national society is **VERON**) — DWS is growing quickly into a de-facto standard for reliable amateur data messaging, run as a joint cross-border effort (the shared DWS documentation is hosted under the Belgian UBA, and a monthly NL/BE Winlink exercise already runs on these frequencies).
+**DWS (Dutch Winlink System)** is an **independent** package of Winlink software plus a station configuration, developed in the Netherlands by Chris PA7RHM, Jan PH3J and Hans PA3GJM (its station data is maintained and verified by Jan PH3J; the formal portal is <https://dws.pa7rhm.nl>). It turns a standard Winlink Express station into an unmanned RMS gateway and/or **digipeater**, and adds a live **RADAR** "heard" map so operators can find a reachable RMS. Its authors describe it as *"a robust EmComm solution for exchanging email messages over radio for emergency-communication teams."* Importantly, **DWS is not owned by any one organisation and is not DARES** — it is independent, and DARES, B-EARS and other emergency-communication groups all make use of it. In that emergency-communication context — **B-EARS** (Belgium Emergency Amateur Radio Service, part of the national society **UBA**) and **DARES** (Dutch Amateur Radio Emergency Service, national society **VERON**) — DWS is growing quickly into a de-facto standard for reliable amateur data messaging, run as a joint cross-border effort (its shared documentation is hosted under the Belgian UBA, and a monthly NL/BE Winlink exercise already runs on the channel). DWS is now **standardising on VARA FM** as its on-air mode (see [Section 3.3](#33-why-dws-is-standardising-on-vara-fm)).
 
 ### 2.1 The Belgian case (ON0BAF)
 
-The proposal that seeded this RFC concerns the Belgian unmanned station **ON0BAF**, which is already documented as a DWS RMS installation. Today ON0BAF beacons and carries DWS data on the 2 m **APRS** frequency (144.800 MHz), and on 70 cm it uses 439.850 MHz (its second 70 cm data registration, 430.850 MHz, is currently unused). While this works technically, it is not operationally ideal: APRS is an AX.25 network, whereas DWS is moving toward VARA FM, and — crucially — **VARA FM does not sense an AX.25 packet transmission and will key over it** (see [Section 8](#8-why-not-simply-stay-on-the-aprs-frequency-144800-mhz)). A DWS station therefore needs its **own** coordinated channel, separate from 144.800 MHz APRS.
+The proposal that seeded this RFC concerns the Belgian unmanned station **ON0BAF**, which is already documented as a DWS RMS installation. Today ON0BAF beacons and carries DWS data on the 2 m **APRS** frequency (144.800 MHz), and on 70 cm it uses 439.850 MHz (its second 70 cm data registration, 430.850 MHz, is currently unused). While this works technically, it is not operationally ideal: 144.800 MHz is the coordinated home of a different, dense network — **APRS** — whereas DWS is a separate Winlink system that is standardising on **VARA FM**. A VARA FM exchange occupies the channel for the whole transfer, so running it on the busy APRS channel is disproportionate to the many APRS users there. A DWS station therefore needs its **own** coordinated channel, separate from 144.800 MHz APRS (see [Section 8](#8-why-not-simply-stay-on-the-aprs-frequency-144800-mhz)).
 
 ### 2.2 Why one common frequency, and why cross-border
 
-Because DWS uses **single-frequency digipeating** (every participating station receives and re-transmits on the same channel, like APRS), the stations that are meant to form one contiguous relay network must operate on **exactly the same frequency**. A station on a different frequency simply cannot participate. This is the same reason APRS harmonised on one channel decades ago. For an emergency-communication network that is expected to keep working across the Belgium–Netherlands border, that common frequency should be the same on both sides — which is why this is proposed as a Region-1 coordination item, not a purely national one.
+The reason for one common frequency is **coordination, not a technical dependency on relaying.** DWS uses the shared channel as a **calling / meeting channel** — directly analogous to the B-EARS agreed 2 m FM **voice calling channel, 145.500 MHz**, that mobile stations monitor — on which every station beacons and DWS builds a live **RADAR** map of who is reachable, so an operator can find a usable RMS gateway. For that to work, and for stations to have one predictable place to call, everyone must be on the **same** frequency. **Digipeating is a value-add on top of this, not the reason for it** (see [Section 3.4](#34-radar-the-calling-channel-and-digipeating-as-a-value-add)). For an emergency-communication network expected to keep working across the Belgium–Netherlands border, that common frequency should be the same on both sides — which is why this is a Region-1 coordination item, not a purely national one.
 
 ---
 
@@ -44,7 +44,7 @@ This section is a short primer for band-plan readers and coordinators who may kn
 
 ### 3.1 What Winlink is
 
-Winlink is a store-and-forward email system carried over radio. A client station connects (over RF) to an **RMS gateway**; the gateway passes the traffic to/from the Winlink network. RMS gateways are typically **unattended, automatically-controlled stations**: the transceiver and modem are computer-controlled, the station answers only when it is called, and — following the amateur automatic-control model — it transmits only after it has sensed the channel clear. On VHF/UHF, an RMS gateway can serve **both** AX.25 packet **and** VARA FM clients.
+Winlink is a store-and-forward email system carried over radio. A client station connects (over RF) to an **RMS gateway**; the gateway passes the traffic to/from the Winlink network. RMS gateways are typically **unattended, automatically-controlled stations**: the transceiver and modem are computer-controlled, the station answers only when it is called, and — following the amateur automatic-control model — it transmits only after it has sensed the channel clear. On VHF/UHF, a Winlink RMS gateway can in general serve **both** AX.25 packet **and** VARA FM clients (the DWS channel proposed here standardises on VARA FM — see [Section 3.3](#33-why-dws-is-standardising-on-vara-fm)).
 
 Winlink amateur traffic is **not encrypted**. Message bodies are carried in the open, publicly documented **B2F** compressed binary format (LZHUF-based). Compression is not encryption: the format is public, so the content is observable and legal on the amateur bands. (Winlink is technically capable of AES-256 encryption, but that is used only on non-amateur services — SHARES / MARS / government — where encryption is permitted; amateur-band traffic stays open, as amateur rules require.)
 
@@ -59,15 +59,21 @@ VARA FM has two interoperable profiles:
 
 For reference, either profile is on the order of **10–20× faster than classic 1200-baud AX.25 packet**, with stronger forward error correction and rate adaptation. (The free version of VARA is throttled to ≈ 566 bps; full speed and digipeater use require a paid licence.) Its proprietary, closed, licensed nature is weighed as a strategic consideration in [Section 14](#14-software-openness-and-a-path-to-an-open-modem).
 
-### 3.3 AX.25 packet, and why DWS carries both modes
+### 3.3 Why DWS is standardising on VARA FM
 
-Classic amateur packet radio uses **AX.25** — commonly 1200-baud AFSK on 2 m — the same family of protocol that APRS uses. It is slow but extremely robust. DWS deliberately keeps AX.25 packet as the **mandatory, robust baseline** on every setup (the first connection is made over AX.25), while promoting **VARA FM as the higher-throughput preferred mode** for moving messages and files. So DWS is a *shift toward* VARA FM, not an overnight replacement of packet: both live on the one channel.
+Classic amateur packet radio uses **AX.25** — commonly 1200-baud AFSK on 2 m, the same protocol family as APRS. It is slow but robust, and DWS was originally built to carry **both** AX.25 (via the UZ7HO sound-modem) and VARA FM. DWS is now **standardising on VARA FM alone**, for practical reasons:
 
-One consequence matters for band planning: **VARA FM and AX.25 do not cooperate as channel-sharing peers unless they are coordinated together.** VARA FM does not detect an in-progress packet transmission and will transmit over it. DWS resolves this by running both modes through **one** sound-modem with coordinated digipeat logic on **one** channel — which is precisely why that channel must be a dedicated, coordinated frequency and not shared with an unrelated network such as APRS on 144.800 MHz.
+- **Beacon collisions in a mixed setup.** With both modems active, DWS could not internally sequence the two, so an AX.25 beacon and a VARA FM transmission could start at the same moment and **interrupt an in-progress VARA FM data stream.** Running VARA FM only lets the modem schedule beacons **sequentially**, avoiding those self-collisions.
+- **Reach and robustness.** In practice VARA FM simply works better: its beacons carry **further**, and its adaptive OFDM with strong FEC is **more robust than 1200-baud AX.25**, while being roughly 10–20× faster.
 
-### 3.4 What a DWS "digipeater" actually is
+This RFC therefore proposes **VARA FM (NARROW)** as the on-air mode for the coordinated channel; AX.25 packet is noted only as the historical origin of DWS and of 2 m data on 144.8xx, not as a co-equal mode on the channel. (A common misconception is that VARA FM "keys over" packet — it does **not**: VARA FM has its own channel/data sensing. The problem above was DWS's *internal* beacon scheduling between two separate modems, not VARA FM ignoring the channel.)
 
-Unlike an FM voice repeater, a DWS relay is **not** a split input/output pair. It is a **digipeater**: it receives and re-transmits on the **same** frequency (simplex, store-and-forward). Every DWS user station is itself a digipeater, so a client that cannot reach a distant RMS directly can still reach it via one hop through another user — the network maps and relays itself, exactly like APRS on its shared channel. DWS keeps this digipeat mode active for both AX.25 and VARA FM (its default role SSID **-12**), and at RMS sites a **crossband** digipeater (SSID **-11**) can bridge to another band. RMS gateway stations use SSID **-10**.
+### 3.4 RADAR, the calling channel, and digipeating as a value-add
+
+DWS uses the shared frequency in two distinct ways:
+
+- **A coordinated calling channel + RADAR map.** Every station beacons on the channel (now on VARA FM), and DWS builds a live **RADAR** "heard" map of which stations and RMS gateways are reachable. This makes the channel a **calling / meeting channel** — the data-mode counterpart of the B-EARS 2 m FM voice calling channel **145.500 MHz** — where an operator can see, and reach, a usable RMS. **This is the core reason for one common frequency.**
+- **Digipeating — an optional coverage extender.** A DWS relay is **not** a split input/output pair like an FM voice repeater; it is a **digipeater** that receives and re-transmits on the **same** frequency (simplex, store-and-forward). If a station cannot hear an RMS directly, a nearby neighbour can relay it one hop further. VARA FM now supports this single-frequency digipeating; **cross-band** digipeating (VHF↔UHF) is currently only available on AX.25 and is being developed for VARA FM by Jan PH3J. Digipeating **extends** coverage — it is a value-add, **not** a precondition for the network. (DWS roles are tagged by SSID: **-10** RMS gateway, **-12** digipeater, **-11** crossband digipeater.)
 
 Because a digipeater is single-frequency simplex, a 144.850 MHz DWS channel needs **no input/output pair** and consumes only **one 12.5 kHz channel** — and it does not touch the 2 m FM repeater-input sub-band (which begins higher up, see [Section 6](#6-compatibility-with-existing-2-m-usage)).
 
@@ -112,7 +118,7 @@ The proposed primary channel is:
 
 > **144.850 MHz** (12.5 kHz FM raster)
 
-This is the frequency that has already become the de-facto standard 2 m Winlink channel for DWS/DARES in the Netherlands, and it is already in coordinated use in Belgium (see [Section 7](#7-why-144850-mhz-frequency-selection-rationale) and [Section 13.2](#132-existing-stations-and-initial-test-bed)). It sits inside the IARU Region 1 2 m **MGM / Digital-Communications** segment (144.794–144.9625 MHz, 12 kHz maximum bandwidth), where unmanned digital stations belong.
+This is the frequency that has already become the de-facto standard 2 m Winlink channel for DWS in the Netherlands, and it is already in coordinated use in Belgium (see [Section 7](#7-why-144850-mhz-frequency-selection-rationale) and [Section 13.2](#132-existing-stations-and-initial-test-bed)). It sits inside the IARU Region 1 2 m **MGM / Digital-Communications** segment (144.794–144.9625 MHz, 12 kHz maximum bandwidth), where unmanned digital stations belong.
 
 ### 5.1 On-air settings (the coordinated channel)
 
@@ -120,14 +126,14 @@ All participating stations use the same channel so they can hear and relay one a
 
 | Parameter | Value |
 | --- | --- |
-| Modes on the channel | **Winlink** over **AX.25 packet** (1200-baud AFSK, robust baseline) **and VARA FM (NARROW)** (preferred, higher throughput) |
+| Mode on the channel | **Winlink over VARA FM (NARROW)** — the mode DWS is standardising on (AX.25 packet is DWS's historical origin, not a proposed co-channel mode — see [Section 3.3](#33-why-dws-is-standardising-on-vara-fm)) |
 | Station software | Winlink Express + **DWS (Dutch Winlink System)** package |
-| Role / topology | Single-frequency **digipeating** (store-and-forward); RMS gateways (SSID -10), digipeaters (SSID -12), crossband bridges at RMS sites (SSID -11) |
+| Role / topology | Coordinated **calling channel** + **RADAR** beacon map for RMS discovery; single-frequency **digipeating** as an optional coverage extender. SSIDs: -10 RMS gateway, -12 digipeater, -11 crossband digipeater (cross-band currently on AX.25; VARA FM in development) |
 | Centre frequency | **144.850 MHz** |
 | Channel raster | **12.5 kHz** FM |
-| On-air emission | Ordinary narrow-band FM — e.g. **`12K0F3E`** (VARA FM), **`12K0F2D`**-class (AX.25 packet) |
+| On-air emission | Ordinary narrow-band FM — **`12K0F3E`** (VARA FM) |
 | VARA FM profile | **NARROW** (fits the 12.5 kHz channel, ≈ 13 kbps). WIDE (≈ 25 kbps) needs a wider coordinated channel and is **out of scope** for this 12.5 kHz channel |
-| Throughput | AX.25 1200-baud baseline; VARA FM narrow ≈ 13 kbps (≈ 10–20× packet) |
+| Throughput | VARA FM NARROW ≈ 13 kbps (≈ 10–20× faster than 1200-baud AX.25 packet) |
 | Content | Ham-only; **no encryption** (Winlink B2F compression only); callsign identification |
 
 Because the on-air signal is ordinary narrow-band FM — occupying a standard 12.5 kHz channel, with an *occupied* bandwidth within the segment's 12 kHz maximum — a 144.850 MHz DWS channel is **fully conformant**, and there is no channel-width problem to resolve. (The 12.5 kHz figure is the channel *raster*/spacing; the segment's 12 kHz limit is on *occupied* bandwidth, which is why the VARA FM emission is designated `12K0F3E` = 12.0 kHz.)
@@ -146,14 +152,14 @@ The 144.850 MHz channel sits in the IARU Region 1 2 m **MGM / Digital-Communicat
 This proposal therefore aims to avoid:
 
 - direct overlap with APRS (144.800) and with the 2 m repeater-input sub-band (≥ 144.975);
-- any unmanaged collision between VARA FM and AX.25 by keeping both under one coordinated DWS channel;
+- burdening the dense APRS network on 144.800 MHz with a channel-occupying VARA FM data mode (hence a dedicated channel, see [Section 8](#8-why-not-simply-stay-on-the-aprs-frequency-144800-mhz));
 - deployment on top of a live DV/voice-gateway installation on 144.850 in any country (hence the per-country check).
 
 ---
 
 ## 7. Why 144.850 MHz (frequency selection rationale)
 
-**It is already the standard, and already coordinated.** 144.850 MHz is the primary de-facto 2 m Winlink frequency for DWS/DARES in the Netherlands (the DWS documentation names 144.850 first, alongside a second 2 m frequency 144.825 MHz and a UHF frequency 430.9875 MHz). In Belgium, **ON0AND is already a licensed, coordinated unmanned station on 144.850 MHz registered as "Packet Radio + VARA FM"** (50 W, omnidirectional, 8.5 dBd, emission `12K0F3E`), and **ON0BAF** is documented as a DWS RMS installation. Harmonising on 144.850 codifies what is already happening on both sides of the border rather than imposing a new frequency.
+**It is already the standard, and already coordinated.** 144.850 MHz is the primary de-facto 2 m Winlink frequency for DWS in the Netherlands (the DWS documentation names 144.850 first, alongside a second 2 m frequency 144.825 MHz and a UHF frequency 430.9875 MHz). In Belgium, **ON0AND is already a licensed, coordinated unmanned station on 144.850 MHz registered as "Packet Radio + VARA FM"** (50 W, omnidirectional, 8.5 dBd, emission `12K0F3E`), and **ON0BAF** is documented as a DWS RMS installation. Harmonising on 144.850 codifies what is already happening on both sides of the border rather than imposing a new frequency.
 
 **It is in the right segment, region-wide.** 144.850 MHz sits inside the IARU R1 2 m **MGM / Digital-Communications** segment (144.794–144.9625 MHz, 12 kHz max), the part of the band intended for machine-generated / digital modes and unmanned digital stations — the correct home for an unmanned data gateway/digipeater. And because the on-air signal is a standard 12.5 kHz FM emission, the mode is fully conformant with the segment's 12 kHz maximum.
 
@@ -161,9 +167,9 @@ This proposal therefore aims to avoid:
 
 **The honest caveats, and how they are handled.**
 
-- *It is a community convention, not (yet) a band-plan designation.* The plan's current spot annotation for 144.8500 MHz is *"DV internet voice gateway."* DWS/Winlink use is a de-facto DARES/B-EARS convention within the digital segment. This RFC therefore asks IARU R1 (and each national society) to **recognise and coordinate 144.850 MHz as the 2 m channel for unmanned Winlink / DWS (packet + VARA FM) stations**, and to confirm before deployment that no live DV/voice-gateway installation already occupies 144.850 MHz nationally (a per-country check, [Section 13](#13-coordination-proposal)).
+- *It is a community convention, not (yet) a band-plan designation.* The plan's current spot annotation for 144.8500 MHz is *"DV internet voice gateway."* DWS/Winlink use is a de-facto DARES/B-EARS convention within the digital segment. This RFC therefore asks IARU R1 (and each national society) to **recognise and coordinate 144.850 MHz as the 2 m channel for unmanned Winlink / DWS (VARA FM) stations**, and to confirm before deployment that no live DV/voice-gateway installation already occupies 144.850 MHz nationally (a per-country check, [Section 13](#13-coordination-proposal)).
 - *ITU allocation is not the same as authorised unmanned use.* The ITU allocation makes 144.850 MHz **available** to amateurs region-wide, but whether an **unmanned/automatic** station may operate there is governed by each country's **national band plan and licence conditions**. Some administrations restrict which frequencies an automatic station may use. That national step is explicit in the coordination proposal.
-- *It is not a single nationwide channel the way APRS is.* DWS in practice spans more than one frequency (144.850 and 144.825 on 2 m, plus 430.9875 on UHF) and uses crossband bridging at some RMS sites. The APRS parallel is to the **shared-channel, single-frequency-relay principle** — not a claim that one frequency serves every purpose. This RFC harmonises the **primary 2 m channel** (144.850) and defers 70 cm to a later phase ([Section 12.2](#122-70-cm-harmonisation--a-later-phase)).
+- *It is not a single nationwide channel the way APRS is.* DWS in practice spans more than one frequency (144.850 and 144.825 on 2 m, plus 430.9875 on UHF) and uses crossband bridging at some RMS sites. The APRS parallel is to the **shared calling-channel principle** (one common channel everyone monitors) — not a claim that one frequency serves every purpose. This RFC harmonises the **primary 2 m channel** (144.850) and defers 70 cm to a later phase ([Section 12.2](#122-70-cm-harmonisation--a-later-phase)).
 
 ---
 
@@ -171,8 +177,8 @@ This proposal therefore aims to avoid:
 
 The Belgian case (ON0BAF) currently rides on 144.800 MHz APRS. That the technique works there does not make it the right long-term home:
 
-1. **Different network, different protocol.** 144.800 MHz is the coordinated **APRS** channel — an AX.25 position/telemetry network with its own users and its own coordination. DWS is a separate message-handling network moving toward VARA FM.
-2. **VARA FM would key over APRS.** VARA FM does not sense an in-progress AX.25 packet and will transmit over it. Running DWS VARA FM on the APRS channel would make DWS a disproportionate interferer to the dense, nationally-coordinated population of unmanned APRS stations that already shares 144.800 MHz.
+1. **Different network, different protocol.** 144.800 MHz is the coordinated **APRS** channel — an AX.25 position/telemetry network with its own users and its own coordination. DWS is a separate message-handling network standardising on VARA FM.
+2. **A data mode that occupies the channel.** A VARA FM exchange holds the channel for the duration of the transfer. Placing that on the busy, coordinated APRS channel would make DWS a disproportionate neighbour to the dense, nationally-coordinated population of unmanned APRS stations that already shares 144.800 MHz. (VARA FM *does* sense the channel — the point is simply that an unrelated, channel-occupying data network does not belong on the APRS channel.)
 3. **Coordination clarity.** A dedicated 144.850 MHz channel keeps the two networks — and their coordination, registration and troubleshooting — cleanly separated, exactly as APRS itself was once separated out onto its own channel.
 
 A dedicated channel, 50 kHz away in the same digital segment, is the clean solution — and it is the frequency the Netherlands already uses.
@@ -217,7 +223,7 @@ A Winlink/DWS RMS gateway or digipeater that relays traffic automatically, witho
 Key consequences:
 
 1. **A personal amateur licence is not sufficient.** A personal licence authorises *you* to operate a station under your direct control. An unattended automatic RMS gateway or digipeater generally requires a separate **unmanned-station authorisation** from the national regulator (in Belgium, BIPT/IBPT) before it may operate.
-2. **The channel is single-frequency and digipeated.** Every relaying node receives and re-transmits on the same coordinated frequency; there is no input/output pair as on an FM voice repeater (see [Section 3.4](#34-what-a-dws-digipeater-actually-is)).
+2. **The channel is single-frequency and simplex.** Every relaying node receives and re-transmits on the same coordinated frequency; there is no input/output pair as on an FM voice repeater (see [Section 3.4](#34-radar-the-calling-channel-and-digipeating-as-a-value-add)).
 3. **Register every unmanned node.** Each authorised RMS gateway / digipeater and its responsible operator should be registered nationally, so the node list stays coordinated (see [Section 13](#13-coordination-proposal)).
 4. **Attended portable/handheld Winlink stations** operated under the direct control of a licensed amateur are not unmanned stations and fall under the normal personal licence. A portable station configured to relay automatically, however, takes on digipeater behaviour and should be treated accordingly.
 
@@ -290,14 +296,14 @@ The Belgian proposal explicitly defers 70 cm to a later phase, and this RFC foll
 
 This RFC proposes that IARU Region 1 national societies and repeater/unmanned-station coordinators agree on a common 2 m Winlink / DWS channel before wider deployment, and that the request be carried to the IARU Region 1 VHF/UHF/Microwaves Committee (C5). Coordination, registration and the known-node list are proposed to run **per country** — through each national society or its unmanned-station coordinator — keeping each country's node list, responsible-operator contacts and technical parameters in one authoritative, publicly visible place.
 
-> **Initial consultation.** This draft grew out of a constructive Belgian coordination proposal from the RST club (Radio Elektronica club Sint-Truiden, secretary Walter ON4AWM) to the UBA unmanned-station coordination, forwarded by Rudy ON6VDS — offered, in the club's words, in the open and collaborative spirit long associated with the late Filip ON4PC. The re-scope to a Region-1 channel invites fresh consultation at European level, in the same spirit.
+> **Initial consultation.** This draft grew out of a constructive Belgian coordination proposal from the RST club (Radio Elektronica club Sint-Truiden, secretary Walter ON4AWM) to the UBA unmanned-station coordination, forwarded by Rudy ON6VDS — offered, in the club's words, in the open and collaborative spirit long associated with the late Filip ON4PC. The re-scope to a Region-1 channel invites fresh consultation at European level, in the same spirit. Because DWS is already a cross-border, **Euregional** effort — its expansion into the southern Netherlands is coupled with German (DL) collaboration — this RFC deliberately seeks the early backing of **DARES and VERON** alongside UBA/B-EARS, so that an IARU R1 request carries a double national base rather than resting on one country.
 
 **Suggested coordination steps:**
 
 1. Circulate this RFC among IARU Region 1 national societies (via their VHF/UHF managers) — for the network's current cross-border footprint the **UBA** (Belgium) and **VERON** (the Netherlands) in particular, whose national band-plan positions are what an IARU R1 coordination ultimately rests on — their repeater/technical coordinators, and the amateur emergency-communication groups (B-EARS, DARES and equivalents) — see the [IARU R1 VHF Managers Handbook](https://www.iaru-r1.org/wp-content/uploads/2024/11/VHF_Handbook_V10_02.pdf) and the [VHF/UHF/Microwaves Committee (C5)](https://www.iaru-r1.org/about-us/committees-and-working-groups/vhf-uhf-shf-committee-c5/).
 2. Collect objections, local conflicts, and alternative proposals.
 3. **Per-country check before deployment.** Confirm that no live DV/voice-gateway or other deployed station occupies 144.850 MHz nationally, and confirm that national unmanned-station rules permit an automatic station on this frequency (some administrations restrict automatic-station frequencies).
-4. **Ask IARU R1 and national societies to recognise/coordinate 144.850 MHz** as the 2 m channel for unmanned Winlink / DWS (packet + VARA FM) stations — the single change that turns a de-facto convention into a coordinated channel — and to introduce a **simplified unmanned-station coordination procedure** for these stations, modelled on APRS ([Section 10.1](#101-a-simplified-coordination-procedure--analogous-to-aprs)).
+4. **Ask IARU R1 and national societies to recognise/coordinate 144.850 MHz** as the 2 m channel for unmanned Winlink / DWS (VARA FM) stations — the single change that turns a de-facto convention into a coordinated channel — and to introduce a **simplified unmanned-station coordination procedure** for these stations, modelled on APRS ([Section 10.1](#101-a-simplified-coordination-procedure--analogous-to-aprs)).
 5. Maintain a per-country list of known RMS gateways / digipeaters and responsible operators.
 6. Start with modest-power deployments and monitor for interference.
 7. Adjust power or configuration if interference or complaints arise.
@@ -315,9 +321,9 @@ This RFC proposes that IARU Region 1 national societies and repeater/unmanned-st
 The 2 m channel is not a green-field proposal — stations are already on it. In **Belgium**, the following are the natural starting point:
 
 - **ON0AND** — already licensed and operating on **144.850 MHz** as "Packet Radio + VARA FM" (50 W, omni, 8.5 dBd, 75 m mast) — the existing reference station on the channel. Its parameters imply an estimated ERP on the order of ~350 W, which exceeds the modest-ERP default recommended in [Section 9](#9-power-proposal); as an already-coordinated station with an established coverage need it stands, with its ERP documented exactly as [Section 9.2](#92-erp--eirp-consideration) requires — but new deployments should follow the modest-ERP default rather than take ON0AND's power and gain as the model.
-- **ON0BAF** — documented as a DWS RMS installation; the station whose coordination case seeded this proposal (to move its DWS activity off the 144.800 MHz APRS channel onto 144.850 MHz).
+- **ON0BAF** — documented as a DWS RMS installation; the station whose coordination case seeded this proposal (to move its DWS activity off the 144.800 MHz APRS channel onto 144.850 MHz). Club RST is **awaiting the outcome of this coordination before applying for the ON0BAF unmanned-station authorisation.**
 
-In the **Netherlands**, DWS/DARES already run multiple RMS gateways and digipeaters on 144.850 MHz (for example the DARES Midden-Nederland gateways and others), with a recurring joint NL/BE Winlink exercise on the channel. Exact node counts are not centrally published; the live DWS "RADAR" status map is the reference.
+In the **Netherlands**, multiple DWS RMS gateways and digipeaters already run on 144.850 MHz (for example the DARES Midden-Nederland gateways and others), with a recurring joint NL/BE Winlink exercise on the channel. Exact node counts are not centrally published; the live DWS "RADAR" status map is the reference.
 
 These existing stations, plus any additional coordinated nodes, form the initial cross-border test bed that will drive the evaluation in [Section 13.1](#131-comment-period-and-next-steps).
 
@@ -342,14 +348,14 @@ So the client and TNC layers can already be fully open and cross-platform. The o
 
 **Mercury** (from the Rhizomatica / HERMES project) is a fully open-source (GPL-3.0, written in C), OFDM, ARQ-based modem for reliable email and file transfer. It deserves an honest assessment:
 
-- **Today it is primarily an HF modem.** Its design point and its data rates sit in the HF range, not the VARA FM range. In principle a sound-card modem can run on any transceiver that passes the audio correctly — VHF FM included — but there is, as far as we can find today, **no ready-made VARA-FM-class VHF/FM implementation of Mercury with digipeating** of the kind DWS builds on VARA FM. So Mercury is **not** an immediate drop-in replacement for DWS / VARA FM on 2 m.
+- **Today it is primarily an HF modem.** Its design point and its data rates sit in the HF range, not the VARA FM range. In principle a sound-card modem can run on any transceiver that passes the audio correctly — VHF FM included — but there is, as far as we can find today, **no ready-made VARA-FM-class VHF/FM implementation of Mercury with digipeating** of the kind DWS builds on VARA FM. Being HF-optimised (its FreeDV data waveforms are tuned for Doppler/fading), the original Mercury reaches only about **one-tenth of VARA FM's speed on FM/VHF** — which is exactly why a dedicated FM fork is warranted rather than using Mercury as-is. So Mercury is **not** an immediate drop-in replacement for DWS / VARA FM on 2 m.
 - **But it is open and forkable.** Precisely because it is open source, Mercury can be forked and extended. The interesting question is whether, building on the work already done, one could develop a **more wideband VHF/UHF variant that approaches VARA FM speeds on FM while remaining fully open, auditable, and free of any per-volunteer licence.** That is a development project, not a switch to flip — someone has to write, test and maintain the code. Guru-RF has now started exactly this fork as **MercuryFM** (see [Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers)).
 
 As far as we can see today, **no mature open-source modem plays the same role on FM as VARA FM**, with comparable speed and the same practical availability. Other open and older packet solutions exist, but they do not solve exactly the same problem. That is why Mercury, or a Mercury-derived open modem, is attractive as a *starting point*: not because it replaces VARA FM now, but because it could become the basis of an open VHF/UHF modem later.
 
 ### 14.3 Two hard constraints on any modem choice
 
-- **Modems do not interoperate over the air.** A VARA modem cannot decode a Mercury signal, and vice-versa. A VARA-like TCP/TNC interface may let application software talk to a modem at the *application* level, but that is not RF compatibility. On a single-frequency digipeated network every station must use the **same on-air modem**, so any move from VARA FM to an open modem would be a **coordinated changeover** across the network — not a gradual mix of both on the one channel.
+- **Modems do not interoperate over the air.** A VARA modem cannot decode a Mercury signal, and vice-versa. A VARA-compatible TCP/TNC interface may let application software talk to a modem at the *application* level — MercuryFM already provides exactly such an interface, so Winlink Express and Pat can drive it as they drive VARA (see [Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers)) — but that is **not** RF compatibility. On a single-frequency network every station must use the **same on-air modem**, so any move from VARA FM to an open modem would be a **coordinated changeover** across the network — not a gradual mix of both on the one channel.
 - **No encryption on the amateur channel — whatever the modem.** Independently of the modem (VARA, DWS, Mercury, Pat or anything else), encryption is **not** permitted on the ordinary amateur service in Belgium, and generally across the amateur bands. AES-128 or similar may sound useful for emergency traffic, but it is not allowed on amateur frequencies as a matter of course. Genuinely confidential traffic must go via another channel, or within an explicitly authorised crisis-management / regulator (BIPT/IBPT) framework — never as encryption on the amateur channel. (This restates, from the software angle, the no-encryption requirement in [Section 3.1](#31-what-winlink-is) and [Section 5.1](#51-on-air-settings-the-coordinated-channel).)
 
 ### 14.4 Openness over origin
@@ -362,7 +368,11 @@ To turn the open-modem track from an idea into working code, ON6URE / RF.Guru ha
 
 > <https://github.com/Guru-RF/MercuryFM>
 
-**Where the idea comes from.** Mercury ([Section 14.2](#142-mercury--an-open-modem-and-a-possible-fork-base)) is an open, proven OFDM / ARQ modem, but its design point is HF and its data rates sit in the HF range. VARA FM, by contrast, reaches its speed by pushing a wide OFDM waveform through the audio path of an ordinary FM transceiver — but it is closed and licensed. **MercuryFM takes Mercury's open OFDM / ARQ foundation and adapts it for the flat audio path of an FM radio**, going more wideband so it can approach VARA FM's throughput on 2 m / 70 cm while staying **fully open, auditable and licence-free** — no closed binary, no per-volunteer licence, no Windows-only tooling. It is the concrete attempt at the open, VARA-FM-class modem this section argues the network will eventually need. It is early and openly experimental: it makes no claim to match VARA FM today — which is exactly why help is wanted.
+**Where the idea comes from.** Mercury ([Section 14.2](#142-mercury--an-open-modem-and-a-possible-fork-base)) is an open, proven OFDM / ARQ modem, but its design point is HF and its data rates sit in the HF range. VARA FM, by contrast, reaches its speed by pushing a wide OFDM waveform through the audio path of an ordinary FM transceiver — but it is closed and licensed. **MercuryFM takes Mercury's open OFDM / ARQ foundation and adapts it for the flat audio path of an FM radio**, going more wideband so it can approach VARA FM's throughput on 2 m / 70 cm while staying **fully open, auditable and licence-free** — no closed binary, no per-volunteer licence, no Windows-only tooling. It is the concrete attempt at the open, VARA-FM-class modem this section argues the network will eventually need.
+
+**Current status (July 2026).** MercuryFM is early but already working. It builds and runs on **macOS and Linux** (arm64). Its first FM waveform, **qam16fm** (16-QAM, rate-0.80 LDPC), carries **≈ 4.6 kbps in ≈ 2 kHz** — per unit of bandwidth already roughly half of VARA FM's efficiency (VARA FM NARROW reaches ≈ 13 kbps, but over a wider ≈ 3 kHz audio path). A **loopback test passes with zero errors**, and a **two-node ARQ link** has been tested end-to-end in a container (no radio yet), including live mode-switching (adaptive **gear-shift**). Crucially, MercuryFM already exposes a **VARA-compatible TCP/TNC interface**, so applications such as Winlink Express and **Pat** can drive it exactly as they drive VARA — the RF waveform differs, but the software interface is familiar. (Detailed measurements and the rate-vs-VARA-FM analysis are kept in the project's [`NOTES.md`](https://github.com/Guru-RF/MercuryFM/blob/main/NOTES.md).)
+
+**Roadmap.** Raise the 16-QAM LDPC rate toward the near-term target of **5.4–7.2 kbps**, then move to **64-QAM** and eventually **256-QAM** to approach VARA FM's speed; alongside over-the-air lab tests with two RF.Guru FM hotspots on **12.5 kHz and 25 kHz** channels, a **Windows build**, and deeper Winlink/Pat integration. It makes no claim to match VARA FM today — which is exactly why help is wanted.
 
 **We are looking for co-developers and testers:**
 
@@ -382,6 +392,8 @@ A dedicated and coordinated amateur channel for unmanned Winlink / DWS stations 
 - it keeps the network **ham-only and non-encrypted**, with documented technical parameters and a public node list;
 - it gives B-EARS, DARES and their served agencies **one predictable, harmonised, cross-border channel** to plan around — the property an emergency network most needs;
 - it lets national regulators see a coordinated, registered, lightweight-to-authorise class of unmanned station rather than ad-hoc deployments.
+
+A coordinated DWS channel also has real **training value** for the served-agency mission. The B-EARS installation uses DWS together with its **Virtual Ether** — a virtual AX.25 network that integrates with the live radio-Winlink links — as a training tool: new members can learn the environment before tackling the more complex radio-interface side, and can take part in exercises while travelling and keep using the same setup, with messages staying inside Winlink rather than crossing to outside email. It is also where operators learn the discipline inherent to data-over-radio — manually initiating transmissions, working within limited data volumes, and using the built-in relief-agency forms (e.g. the **ICS** standard).
 
 This is a proactive coordination effort, not a reaction to a problem.
 
@@ -424,18 +436,19 @@ Please keep Issues and Pull Requests in **English**, so the discussion stays acc
 
 Feedback is requested on the following points:
 
-1. Is **144.850 MHz** acceptable as the harmonised Region-1 2 m channel for unmanned Winlink / DWS (packet + VARA FM) stations?
+1. Is **144.850 MHz** acceptable as the harmonised Region-1 2 m channel for unmanned Winlink / DWS (VARA FM) stations?
 2. Should IARU R1 be asked to **recognise/coordinate** 144.850 MHz for this use within the MGM/Digital-Communications segment, given that its current spot annotation is "DV internet voice gateway"?
 3. Are there national conflicts at 144.850 MHz (e.g. live DV/voice-gateway installations), and does your administration permit an **unmanned/automatic** station there?
 4. Is a **simplified, APRS-style coordination procedure** for unmanned Winlink / DWS stations supported in your country?
 5. What should the **recommended** and **maximum** conducted RF output (and ERP) be for these stations?
-6. Should the channel profile be **VARA FM NARROW + AX.25 packet** (as proposed for 12.5 kHz), or is there a case for a wider coordinated channel for VARA FM WIDE elsewhere?
+6. Is **VARA FM NARROW** (fitting the 12.5 kHz channel) the right profile, or is there a case for a wider coordinated channel for VARA FM WIDE elsewhere?
 7. Should the **secondary NL frequency 144.825 MHz** be part of any harmonisation, or left as a national matter?
 8. Should fixed RMS gateways / digipeaters be **registered** through each national society / unmanned-station coordinator?
 9. When should the **70 cm harmonisation** ([Section 12.2](#122-70-cm-harmonisation--a-later-phase)) be taken up, and around which frequency (e.g. the NL 430.9875 MHz, or ON0BAF's 439.850 / 430.850 MHz)?
 10. Should a small technical working group be created to maintain the frequency and node list, jointly with the emergency-communication groups (B-EARS, DARES)?
 11. Should the network pursue a parallel **open-modem track** — for example a Mercury-derived (HERMES / Rhizomatica) open VHF/UHF modem — alongside VARA FM, so it is not tied long-term to closed binaries, Windows-only tooling, or per-volunteer licences (see [Section 14](#14-software-openness-and-a-path-to-an-open-modem))?
 12. Are there developers and testers — within B-EARS, DARES or the wider Region-1 community — willing to help build and on-air-test the **MercuryFM** open-modem project ([Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers))?
+13. For operators already running VARA FM: what **C/N (carrier-to-noise) ratios** do you see on real paths, and at which VARA rates? (This helps calibrate the open-modem target — see [Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers).)
 
 ---
 
@@ -444,7 +457,7 @@ Feedback is requested on the following points:
 The proposed starting point is:
 
 - **144.850 MHz** as the harmonised Region-1 2 m channel for unmanned Winlink / DWS stations, on a **12.5 kHz FM** raster
-- Channel carrying **AX.25 packet (1200-baud, robust baseline)** and **VARA FM NARROW (preferred, ≈ 13 kbps)**, DWS single-frequency **digipeating**
+- Channel used as a coordinated **VARA FM (NARROW, ≈ 13 kbps)** calling channel with a **RADAR** RMS-discovery map; DWS single-frequency **digipeating** as an optional coverage extender (AX.25 packet is DWS's historical origin, not a proposed co-channel mode)
 - Ordinary narrow-band FM on the air (e.g. `12K0F3E`) — no new mode, fully conformant with the segment's 12 kHz maximum
 - Ham-only use; **no encryption** (Winlink B2F compression only); callsign identification
 - Every fixed RMS gateway / digipeater licensed as an **unmanned station**; all nodes sharing the one coordinated frequency
@@ -471,11 +484,13 @@ This approach gives radio amateurs and their emergency-communication services ac
 - **VARA FM — the modem (EA5HVK / Ros Modem)** — proprietary, closed-source, licensed
   <https://rosmodem.wordpress.com/>
 - **Mercury — open-source (GPL-3.0) OFDM / ARQ HF modem, Rhizomatica / HERMES project** — candidate open-modem fork base ([Section 14](#14-software-openness-and-a-path-to-an-open-modem))
-  <https://github.com/Rhizomatica/mercury> · <https://www.rhizomatica.org/>
+  <https://github.com/Rhizomatica/mercury> · <https://www.rhizomatica.org/hermes/>
 - **Pat — open-source cross-platform Winlink client (LA5NTA)** — Linux / macOS / Windows / Raspberry Pi
   <https://getpat.io/> · <https://github.com/la5nta/pat>
-- **MercuryFM — open VHF/UHF FM fork of Mercury (Guru-RF / ON6URE)** — seeking co-developers and testers ([Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers))
-  <https://github.com/Guru-RF/MercuryFM>
+- **MercuryFM — open VHF/UHF FM fork of Mercury (Guru-RF / ON6URE)** — seeking co-developers and testers ([Section 14.5](#145-mercuryfm--a-call-for-co-developers-and-testers)); roadmap and rate-vs-VARA-FM analysis in `NOTES.md`
+  <https://github.com/Guru-RF/MercuryFM> · <https://github.com/Guru-RF/MercuryFM/blob/main/NOTES.md>
+- **RF.Guru / ON6URE (Joeri Van Dooren)** — this RFC's maintainer and the MercuryFM initiative
+  <https://rf.guru> · <https://on6ure.be>
 - **DWS — Dutch Winlink System (documentation and software portal)**
   <https://sites.google.com/myuba.be/dws-dutch-winlink-system> · <https://dws.pa7rhm.nl>
 - **DARES — Dutch Amateur Radio Emergency Service (incl. Winlink/DWS)**
